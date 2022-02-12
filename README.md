@@ -4,19 +4,22 @@ numpy实现的机器学习库
 分类模型
 - KNN
 - LDA
-- ID3
 - LR
-- CART
+- Decision Tree(ID3,C4.5,CART)
 - RF
 - perception
 - SVM
+- Neural network
+- GBDT
+- Xgboost
+
 
 回归模型
-- CART
 - LASSO
 - Ridge
 - LR
 - RF
+- Decision Tree(ID3,C4.5,CART)
 
 非监督模型
 - PCA
