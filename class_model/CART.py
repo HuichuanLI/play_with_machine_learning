@@ -83,6 +83,8 @@ class BinaryDecisionTree(object):
         best_criteria = None
         # 初始化数据子集
         best_sets = None
+        if len(y.shape) == 1:
+            y = y.reshape(-1, 1)
 
         # 合并输入和标签
         Xy = np.concatenate((X, y), axis=1)
