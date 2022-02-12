@@ -3,11 +3,6 @@
 # @Author : huichuan LI
 # @File : lda_test.py
 # @Software: PyCharm
-# -*- coding:utf-8 -*-
-# @Time : 2022/2/12 12:30 下午
-# @Author : huichuan LI
-# @File : ridge_test.py
-# @Software: PyCharm
 from class_model import  LDA
 import numpy as np
 # 导入matplotlib绘图库
@@ -38,3 +33,9 @@ from sklearn.metrics import accuracy_score
 accuracy = accuracy_score(y_test, y_pred)
 print(accuracy)
 
+from sklearn.discriminant_analysis import LinearDiscriminantAnalysis
+clf = LinearDiscriminantAnalysis()
+clf.fit(X_train, y_train)
+y_pred = clf.predict(X_test)
+accuracy = accuracy_score(y_test, y_pred)
+print(accuracy)
