@@ -2,3 +2,5 @@
 .idea/
 
 metric/__pycache__/
+
+class_model/__pycache__/
