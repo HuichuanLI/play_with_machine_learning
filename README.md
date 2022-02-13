@@ -20,6 +20,8 @@ numpy实现的机器学习库
 - LR
 - RF
 - Decision Tree(ID3,C4.5,CART)
+- GBDT
+- Xgboost
 
 非监督模型
 - PCA
