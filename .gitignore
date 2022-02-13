@@ -8,3 +8,5 @@ class_model/__pycache__/
 cluster/__pycache__/
 
 regression_model/__pycache__/
+
+prob/__pycache__/
