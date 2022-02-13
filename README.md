@@ -12,7 +12,7 @@ numpy实现的机器学习库
 - Neural network
 - GBDT
 - Xgboost
-
+- Adaboost
 
 回归模型
 - LASSO
@@ -30,3 +30,5 @@ numpy实现的机器学习库
 - HMM
 - CRF
 - EM
+- NB
+- MCMC
