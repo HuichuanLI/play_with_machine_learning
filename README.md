@@ -27,6 +27,7 @@ numpy实现的机器学习库
 - SVD
 
 概率模型
+- ME
 - HMM
 - CRF
 - EM
