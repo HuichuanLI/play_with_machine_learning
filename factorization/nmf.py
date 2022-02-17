@@ -4,6 +4,7 @@
 # @File : nmf.py
 # @Software: PyCharm
 import numpy as np
+from factorization.als import VanillaALS
 class NMF:
     def __init__(self, K, max_iter=200, tol=1e-4):
         self.K = K
