@@ -23,4 +23,13 @@ B = np.array([
 N = 4
 M = 2
 
-hmm = MultinomialHMM(A, B, pi, eps=1e-9)
+hmm = MultinomialHMM(A=A, B=B, pi=pi, eps=0)
+
+print(hmm.generate(5, [3, 2, 1, 0], [0, 1]))
+
+print(hmm.log_likelihood(np.array([1, 0, 1, 0, 0])))
+
+# 给定观测序列
+O = np.array([1, 0, 1, 1, 0])
+# 输出最可能的隐状态序列
+print(hmm.decode(O))
