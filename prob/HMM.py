@@ -355,38 +355,6 @@ class MultinomialHMM:
 
     def _E_step(self, O):
         r"""
-        Run a single E-step update for the Baum-Welch/Forward-Backward
-        algorithm. This step estimates ``xi`` and ``gamma``, the excepted
-        state-state transition counts and the expected state-occupancy counts,
-        respectively.
-        ``xi[i,j,k]`` gives the probability of being in state `i` at time `k`
-        and state `j` at time `k+1` given the observed sequence `O` and the
-        current estimates for transition (`A`) and emission (`B`) matrices::
-        .. math::
-            xi[i,j,k] &= P(q_k=i,q_{k+1}=j \mid O,A,B,pi) \\
-                      &= \frac{
-                            P(q_k=i,q_{k+1}=j,O \mid A,B,pi)
-                         }{P(O \mid A,B,pi)} \\
-                      &= \frac{
-                            P(o_1,o_2,\ldots,o_k,q_k=i \mid A,B,pi) \times
-                            P(q_{k+1}=j \mid q_k=i) \times
-                            P(o_{k+1} \mid q_{k+1}=j) \times
-                            P(o_{k+2},o_{k+3},\ldots,o_T \mid q_{k+1}=j,A,B,pi)
-                         }{P(O \mid A,B,pi)} \\
-                      &= \frac{
-                            \mathtt{fwd[j, k] * self.A[j, i] *
-                            self.B[i, o_{k+1}] * bwd[i, k + 1]}
-                         }{\mathtt{fwd[:, T].sum()}}
-        The expected number of transitions from state `i` to state `j` across the
-        entire sequence is then the sum over all timesteps: ``xi[i,j,:].sum()``.
-        ``gamma[i,j]`` gives the probability of being in state `i` at time `j`
-        .. math:: \mathtt{gamma[i,j]} = P(q_j = i \mid O, A, B, \pi)
-        Parameters
-        ----------
-        O : :py:class:`ndarray <numpy.ndarray>` of shape `(I, T)`
-            The set of `I` training observations, each of length `T`.
-        Returns
-        -------
         gamma : :py:class:`ndarray <numpy.ndarray>` of shape `(I, N, T)`
             The estimated state-occupancy count matrix.
         xi : :py:class:`ndarray <numpy.ndarray>` of shape `(I, N, N, T)`
@@ -432,20 +400,6 @@ class MultinomialHMM:
 
     def _M_step(self, O, gamma, xi, phi):
         """
-        Run a single M-step update for the Baum-Welch/Forward-Backward
-        algorithm.
-        Parameters
-        ----------
-        O : :py:class:`ndarray <numpy.ndarray>` of shape `(I, T)`
-            The set of `I` training observations, each of length `T`.
-        gamma : :py:class:`ndarray <numpy.ndarray>` of shape `(I, N, T)`
-            The estimated state-occupancy count matrix.
-        xi : :py:class:`ndarray <numpy.ndarray>` of shape `(I, N, N, T)`
-            The estimated state-state transition count matrix.
-        phi : :py:class:`ndarray <numpy.ndarray>` of shape `(I, N)`
-            The estimated starting count matrix for each latent state.
-        Returns
-        -------
         A : :py:class:`ndarray <numpy.ndarray>` of shape `(N, N)`
             The estimated transition matrix.
         B : :py:class:`ndarray <numpy.ndarray>` of shape `(N, V)`
