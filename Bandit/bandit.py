@@ -226,3 +226,69 @@ class GaussianBandit(Bandit):
         """
         return self.best_ev, self.best_arm
 
+
+class ContextualLinearBandit(Bandit):
+    def __init__(self, K, D, payoff_variance=1):
+        """
+        Parameters
+        ----------
+        K : int
+            The number of bandit arms
+        D : int
+            The dimensionality of the context vectors
+        payoff_variance : float or :py:class:`ndarray <numpy.ndarray>` of shape `(K,)`
+            The variance of the random noise in the arm payoffs. If a float,
+            the variance is assumed to be equal for each arm. Default is 1.
+        """
+        payoff_variance = [payoff_variance] * K
+        assert len(payoff_variance) == K
+        assert all(v > 0 for v in payoff_variance)
+        self.K = K
+        self.D = D
+        self.payoff_variance = payoff_variance
+
+        placeholder = [None] * K
+        super().__init__(placeholder, placeholder)
+        # initialize the theta matrix
+        self.thetas = np.random.uniform(-1, 1, size=(D, K))
+        self.thetas /= np.linalg.norm(self.thetas, 2)
+
+    @property
+    def hyperparameters(self):
+        """A dictionary of the bandit hyperparameters"""
+        return {
+            "id": "ContextualLinearBandit",
+            "K": self.K,
+            "D": self.D,
+            "payoff_variance": self.payoff_variance,
+        }
+
+    @property
+    def parameters(self):
+        """A dictionary of the current bandit parameters"""
+        return {"thetas": self.thetas}
+
+    def get_context(self):
+        """
+        Sample the context vectors for each arm from a multivariate standard
+        normal distribution.
+        Returns
+        -------
+        context : :py:class:`ndarray <numpy.ndarray>` of shape `(D, K)`
+            A `D`-dimensional context vector sampled from a standard normal
+            distribution for each of the `K` bandit arms.
+        """
+        return np.random.normal(size=(self.D, self.K))
+
+    def oracle_payoff(self, context):
+        """
+        Return the expected reward for an optimal agent.
+        """
+        best_arm = np.argmax(self.arm_evs)
+        return self.arm_evs[best_arm], best_arm
+
+    def _pull(self, arm_id, context):
+        K, thetas = self.K, self.thetas
+        self._noise = np.random.normal(scale=self.payoff_variance, size=self.K)
+        self.arm_evs = np.array([context[:, k] @ thetas[:, k] for k in range(K)])
+        return (self.arm_evs + self._noise)[arm_id]

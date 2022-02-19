@@ -3,26 +3,10 @@
 # @Author : huichuan LI
 # @File : bandit_test.py
 # @Software: PyCharm
-from Bandit.policy import EpsilonGreedy, UCB1
-from Bandit.bandit import BernoulliBandit
+from Bandit.policy import EpsilonGreedy, UCB1, ThompsonSamplingBetaBinomial,LinUCB
+from Bandit.bandit import BernoulliBandit,ContextualLinearBandit
 import numpy as np
 from Bandit.trainer import BanditTrainer
-
-
-def mse(bandit, policy):
-    """
-    Computes the mean squared error between a policy's estimates of the
-    expected arm payouts and the true expected payouts.
-    """
-    if not hasattr(policy, "ev_estimates") or len(policy.ev_estimates) == 0:
-        return np.nan
-
-    se = []
-    evs = bandit.arm_evs
-    ests = sorted(policy.ev_estimates.items(), key=lambda x: x[0])
-    for ix, (est, ev) in enumerate(zip(ests, evs)):
-        se.append((est[1] - ev) ** 2)
-    return np.mean(se)
 
 
 # 定义 T = 1000 个用户，即总共进行1000次实现
@@ -46,5 +30,12 @@ bb = BernoulliBandit(true_rewards)
 
 eg = EpsilonGreedy()
 ucb1 = UCB1()
+tom = ThompsonSamplingBetaBinomial()
 
-BanditTrainer().compare([eg, ucb1], bb, 10000, 5)
+BanditTrainer().compare([eg, ucb1, tom], bb, 10000, 5)
+
+
+
+lb = LinUCB()
+ct = ContextualLinearBandit(T,N)
+BanditTrainer().compare([lb], ct, 10000, 5)
